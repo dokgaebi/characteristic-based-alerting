@@ -1,0 +1,16 @@
+| datamodel Web search summariesonly=true
+| search Web.status>=200 Web.status <300
+| eventstats count as eventCount by host,Web.http_referrer
+| eventstats avg(eventCount) as average by host
+| eventstats stdev(eventCount) as stdDev by host
+| eventstats median("eventCount") as median by host 
+| eventstats p10("eventCount") as p10 by host 
+| eval low=if(average-2*stdDev<0 AND low>p10, p10, average-2*stdDev)
+| eval test=if(eventCount<low,"true","false")
+| eval own=if(like(host,"%".Web.http_referrer."%"),"true","false")
+| eval nowDate=strftime(now(),"%m/%d/%y")
+| eval eventDate=strftime(_time,"%m/%d/%y")
+| dedup host,Web.http_referrer
+| search test="true" own="false" eventDate=nowDate NOT Web.http_referrer IN ()
+| table host,Web.uri_path,Web.src,Web.http_referrer,own,test,eventCount,average,stdDev,median,p10
+

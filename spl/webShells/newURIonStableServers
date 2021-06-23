@@ -1,0 +1,20 @@
+| datamodel Web search summariesonly=true
+| search Web.uri_path=*
+| stats earliest(_time) as firstSeen latest(_time) as lastSeen by host,Web.uri_path
+| eval firstSeenDate=strftime(firstSeen,"%m/%d/%y")
+| eval lastSeenDate=strftime(lastSeen,"%m/%d/%y")
+| eval dateNow=strftime(now(),"%m/%d/%y")
+| eval newEvent=if(firstSeenDate=dateNow AND lastSeenDate=dateNow,"true","false")
+| eval age=strftime(lastSeen-firstSeen,"%d")
+| eventstats count(age) as eventCount by host,Web.uri_path
+| eventstats avg(age) as average by host
+| eventstats stdev(age) as stdDev by host
+| eventstats p20(age) as p20 by host
+| eval average=round(average,0)
+| eval stdDev=round(stdDev,0)
+| eval low=if(average-stdDev<0 AND p20>average-stdDev,p20,average-stdDev)
+| eval test=if(age<low,"true","false")
+| search test="true" newEvent="true"
+| dedup host,Web.uri_path
+| table host,Web.uri_path,firstSeenDate,lastSeenDate,dateNow,newEvent,age,average,stdDev,p20,low,test
+

@@ -1,0 +1,28 @@
+| datamodel Web search summariesonly=true
+| search Web.status>=200 Web.status<300
+| transaction host,Web.src,Web.uri_path maxpause=30m keeporphans=true
+| eventstats avg(duration) as avgDuration by host
+| eval avgDuration=round(avgDuration,0)
+| eventstats p95(duration) as p95Duration by host
+| eval p95Duration=round(p95Duration,0)
+| eventstats stdev(duration) as stdevDuration by host
+| eval stdevDuration=round(stdevDuration,0)
+| eventstats sum(Web.bytes) as sessionBytes by _cd
+| eventstats avg(sessionBytes) as avgSessionBytes by host
+| eval avgSessionBytes=round(avgSessionBytes,0)
+| eventstats p95(sessionBytes) as p95SessionBytes by host
+| eval p95SessionBytes=round(p95SessionBytes,0)
+| eventstats stdev(sessionBytes) as stdevSessionBytes by host
+| eval stdevSessionBytes=round(stdevSessionBytes,0)
+| eval highSessionBytes=if(avgSessionBytes-2*stdevSessionBytes<0 AND highSessionBytes<p95SessionBytes, round(p95SessionBytes,0), round(avgSessionBytes+2*stdevSessionBytes,0))
+| eval highDuration=if(avgDuration-2*stdevDuration<0 AND highSessionBytes<p95Duration, round(p95Duration,0), round(avgDuration+2*stdevDuration,0))
+| eval test=case(
+   sessionBytes>highSessionBytes AND duration>highDuration, "High Duration and Volume",
+   sessionBytes>highSessionBytes, "High Volume",
+   duration>highDuration,"High Duration",
+   True(),"false")
+| eval nowDate=strftime(now(),"%m/%d/%y" )
+| eval eventDate=strftime(_time,"%m/%d/%y" )
+| search test!="false" nowDate-eventDate
+| table host,Web.src,Web.uri_path,test,sessionBytes,highSessionBytes,duration,highDuration,avgDuration,p95Duration,stdevDuration,avgSessionBytes,p95SessionBytes,stdevSessionBytes
+

@@ -1,0 +1,21 @@
+| datamodel Web search summariesonly=true
+| search Web.uri_query=* Web.status>=200 Web.status <300
+| rename Web.uri_query as query
+| eval length = len(query)
+| eventstats count as eventCount by host,Web.uri_path
+| eventstats avg(length) as average by host,Web.uri_path
+| eventstats stdev(length) as stdDev by host,Web.uri_path
+| eventstats p10(length) as p10 by host,Web.uri_path
+| eventstats p90(length) as p90 by host,Web.uri_path
+| eventstats min(length) as min by host,Web.uri_path
+| eventstats max(length) as max by host,Web.uri_path
+| eval range=max-min
+| eval rangePer=round(range/average*100,0)
+| eval low=if(average-2*stdDev<0 AND low>p10, round(p10,0), round(average-2*stdDev,0))
+| eval high=if(average-2*stdDev<0 AND high<p90, round(p90,0), round(average+2*stdDev,0))
+| eval test=if((length<low OR length>high),"true","false")
+| eval nowDate=strftime(now(),"%m/%d/%y")
+| eval eventDate=strftime(_time,"%m/%d/%y")
+| eval noDev=if(high=low,"true","false")
+| search eventCount>50 rangePer>25 test="true" eventDate=nowDate
+| stats count by host,Web.uri_path,Web.src,test,eventCount,length,range,rangePer,average,low,high,stdDev,p10,p90,query
