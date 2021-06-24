@@ -17,5 +17,5 @@
 | eval nowDate=strftime(now(),"%m/%d/%y")
 | eval eventDate=strftime(_time,"%m/%d/%y")
 | eval noDev=if(high=low,"true","false")
-| search eventCount>50 rangePer>25 test="true" eventDate=nowDate
+| search rangePer>25 test="true" eventDate=nowDate
 | stats count by host,Web.uri_path,Web.src,test,eventCount,length,range,rangePer,average,low,high,stdDev,p10,p90,query
