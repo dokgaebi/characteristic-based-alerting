@@ -5,10 +5,10 @@ The Security Industry has conducted great efforts to reduce the alert fatigue ex
 
 Alert fatigue often results from 2 root causes:
 Insufficiently tuned alerts/notables
-Alerts need to be tuned/created such that the ratio of positives to false-positives is extremely low
-Tuning needs to be conducted continuously and vigorously to ensure alerts are as refined and current as possible
+Alerts need to be tuned/created such that the ratio of positives to false-positives is extremely low.
+Tuning needs to be conducted continuously and vigorously to ensure alerts are as refined and current as possible.
 Inability to tune alerts/notables due to network design/use limitations
-Networks that are inherently insecure or where policies are lax or not enforced will cause even perfectly tuned alerts to have a high false positive rate
+Networks that are inherently insecure or where policies are lax or not enforced will cause even perfectly tuned alerts to have a high false positive rate.
 Security operating in isolation will ot overcome this shortfall, SecOps working together with enterprise architecture will need to investigate and alleviate the experienced issues. 
 
 These solutions are extremely difficult to achieve for the majority of enterprises, as such strategies have been developed to sort the wheat from the chaff.  Strategies such as risk based alerting can greatly assist in sorting through the chaff but the addition of an abstraction layer can cause particularly subtle attacks to go unnoticed.  
@@ -19,4 +19,5 @@ Detection of attacker techniques by focusing on the characteristics of the techn
 
 Techniques need to be dissected to determine what noise (above normal operations) will be made and in what log entry these can be found.
 
-Sensitivity tuning can be achieved by employing a requirement for more than one characteristic for an attack technique to be present.
+Tuning to reduce sensitivity can be achieved by employing a requirement for more than one characteristic alert for an attack technique to be present.  This form of aggregation is very similar to the Splunk UBA threats and Splunk RBA, in that it requires an aggregated alert to be created from basic alerts before notifying the SOC.
+
