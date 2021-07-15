@@ -11,9 +11,10 @@ Tuning needs to be conducted continuously and vigorously to ensure alerts are as
 
 2-Inability to tune alerts/notables due to network design/use limitations
 Networks that are inherently insecure or where policies are lax or not enforced will cause even perfectly tuned alerts to have a high false positive rate.
-Security operating in isolation will ot overcome this shortfall, SecOps working together with enterprise architecture will need to investigate and alleviate the experienced issues. 
 
-These solutions are extremely difficult to achieve for the majority of enterprises, as such strategies have been developed to sort the wheat from the chaff.  Strategies such as risk based alerting can greatly assist in sorting through the chaff but the addition of an abstraction layer can cause particularly subtle attacks to go unnoticed.  
+Security operating in isolation will not overcome this shortfall, SecOps working together with enterprise architecture will need to investigate and alleviate the experienced issues. 
+
+Overcomming these causes is extremely difficult to achieve for the majority of enterprises, as such strategies have been developed to sort the wheat from the chaff.  Strategies such as risk based alerting can greatly assist in sorting through the chaff but the addition of an abstraction layer can cause particularly subtle attacks to go unnoticed.  
 
 Alerts often focus on specific signature traits used in the attack to detect the action.  To avoid detection attackers will monitor threat intelligence to determine the discovered signatures and slightly alter these to avoid future detection.  
 
