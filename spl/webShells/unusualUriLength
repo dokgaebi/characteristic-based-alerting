@@ -17,5 +17,10 @@
 | eval nowDate=strftime(now(),"%m/%d/%y")
 | eval eventDate=strftime(_time,"%m/%d/%y")
 | eval noDev=if(high=low,"true","false")
+| eval _time=now()
+| eval cbaTactic = "unusualUriLength"
 | search rangePer>25 test="true" eventDate=nowDate
-| stats count by host,Web.uri_path,Web.src,test,eventCount,length,range,rangePer,average,low,high,stdDev,p10,p90,query
+| rename Web.uri_path as uri_path Web.src as src_ip Web.http_user_agent as http_user_agent host as device
+| dedup device,uri_path,src_ip,test,eventCount,length,range,rangePer,average,low,high,stdDev,p10,p90,query
+| table _time,device,cbaTactic,uri_path,src_ip,test,eventCount,length,range,rangePer,average,low,high,stdDev,p10,p90,query
+| collect index=cbadetections addtime=true

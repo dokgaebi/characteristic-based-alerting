@@ -1,0 +1,6 @@
+index=cbadetections 
+| eventstats dc(cbaTactic) as tacticCount by host
+| dedup host,uri_path,cbaTactic,src_ip
+| table host,cbaTactic,uri_path,src_ip
+| mvcombine src_ip
+| mvcombine uri_path

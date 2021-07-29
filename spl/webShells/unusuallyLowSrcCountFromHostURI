@@ -11,6 +11,10 @@
 | eval avgSrc=round(avgSrc,0)
 | eval nowDate=strftime(now(),"%m/%d/%y" )
 | eval eventDate=strftime(_time,"%m/%d/%y" )
+| eval _time=now()
+| eval cbaTactic = "unusuallyLowSrcCountFromHostURI"
+| rename Web.uri_path as uri_path Web.src as src_ip Web.http_user_agent as http_user_agent host as device
 | search check=true eventDate=nowDate
-| table host,Web.uri_path,Web.src,check,srcCount,low,avgSrc,stdevSrc,p5Src
-
+| dedup _time,device,cbaTactic,uri_path,src_ip,check,srcCount,low,avgSrc,stdevSrc,p5Src
+| table _time,device,cbaTactic,uri_path,src_ip,check,srcCount,low,avgSrc,stdevSrc,p5Src
+| collect index=cbadetections addtime=true

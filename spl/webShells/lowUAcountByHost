@@ -13,7 +13,10 @@
 | eval own=if(like(host,"%".Web.http_referrer."%"),"true","false")
 | eval nowDate=strftime(now(),"%m/%d/%y")
 | eval eventDate=strftime(_time,"%m/%d/%y")
+| eval _time=now()
+| eval cbaTactic = "lowUAcountByHost"
+| rename Web.uri_path as uri_path Web.src as src_ip Web.http_user_agent as http_user_agent host as device
 | search test="true" own="false" nowDate=eventDate NOT Web.src="127.0.0.1" NOT Web.http_user_agent IN ()
-| dedup host,Web.http_user_agent,Web.src
-| table host,Web.uri_path,Web.src,Web.http_user_agent,eventCount,average,stdDev,median,p10,low
-
+| dedup _time,device,http_user_agent,src_ip
+| table _time,device,cbaTactic,uri_path,src_ip,http_user_agent,eventCount,average,stdDev,median,p10,low
+| collect index=cbadetections addtime=true

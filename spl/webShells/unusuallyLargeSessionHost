@@ -23,6 +23,10 @@
    True(),"false")
 | eval nowDate=strftime(now(),"%m/%d/%y" )
 | eval eventDate=strftime(_time,"%m/%d/%y" )
+| eval _time=now()
+| eval cbaTactic = "lowUAcountByHost"
+| rename Web.uri_path as uri_path Web.src as src_ip Web.http_user_agent as http_user_agent host as device
 | search test!="false" nowDate-eventDate
-| table host,Web.src,Web.uri_path,test,sessionBytes,highSessionBytes,duration,highDuration,avgDuration,p95Duration,stdevDuration,avgSessionBytes,p95SessionBytes,stdevSessionBytes
-
+| dedup _time,device,cbaTactic,src_ip,uri_path,test,sessionBytes,highSessionBytes,duration,highDuration,avgDuration,p95Duration,stdevDuration,avgSessionBytes,p95SessionBytes,stdevSessionBytes
+| table _time,device,cbaTactic,src_ip,uri_path,test,sessionBytes,highSessionBytes,duration,highDuration,avgDuration,p95Duration,stdevDuration,avgSessionBytes,p95SessionBytes,stdevSessionBytes
+| collect index=cbadetections addtime=true
