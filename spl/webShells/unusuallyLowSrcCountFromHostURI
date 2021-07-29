@@ -1,6 +1,6 @@
 | datamodel Web search summariesonly=true 
 | search Web.status>=200 Web.status <300 
-| eventstats count as srcCount by host,Web.uri_path,Web.src
+| eventstats distinct_count(Web.src) as srcCount by host,Web.uri_path
 | dedup host,Web.uri_path
 | eventstats avg(srcCount) as avgSrc by host
 | eventstats stdev(srcCount) as stdevSrc by host
@@ -14,7 +14,7 @@
 | eval _time=now()
 | eval cbaTactic = "unusuallyLowSrcCountFromHostURI"
 | rename Web.uri_path as uri_path Web.src as src_ip Web.http_user_agent as http_user_agent host as device
-| search check=true eventDate=nowDate
+| search check=true eventDate=nowDate 
 | dedup _time,device,cbaTactic,uri_path,src_ip,check,srcCount,low,avgSrc,stdevSrc,p5Src
 | table _time,device,cbaTactic,uri_path,src_ip,check,srcCount,low,avgSrc,stdevSrc,p5Src
 | collect index=cbadetections addtime=true

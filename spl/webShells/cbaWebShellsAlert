@@ -1,6 +1,8 @@
-index=cbadetections 
+index=cbadetections cbaTactic IN (lowUAcountByHost, unusualUriLength,unusuallyLowSrcCountFromHostURI, lowReferrerCountByHost, newURIonStableServers, unusuallyLargeSessionHost)
 | eventstats dc(cbaTactic) as tacticCount by host
+| search tacticCount > 1
 | dedup host,uri_path,cbaTactic,src_ip
 | table host,cbaTactic,uri_path,src_ip
 | mvcombine src_ip
 | mvcombine uri_path
+| mvcombine cbaTactic
