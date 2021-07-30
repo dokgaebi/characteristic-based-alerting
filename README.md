@@ -4,7 +4,9 @@ Characteristic Based Alerting
 
 Requirements
 •	High sensitivity alerting to detect subtle attack techniques
+
 •	Low false positive alert creation
+
 •	Rules specific to individual devices for more accurate base lining
 
 Premise
