@@ -1,7 +1,5 @@
 # characteristic-based-alerting
 
-Characteristic Based Alerting
-
 **Requirements**
 
 •	High sensitivity alerting to detect subtle attack techniques
