@@ -1,0 +1,27 @@
+Web Shell Detection Loggin Requirements
+Access logs are required from all devices with web service capabilities.  This should include servers that use web portals for administration and access, such as Splunk, ESXi etc.
+
+Apache
+/var/log/access.log
+apache2.conf
+	LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
+	CustomLog logs/access.log combined
+
+
+
+Nginx
+/var/log/nginx/access.log
+http {
+    log_format upstream_time '$remote_addr - $remote_user [$time_local] '
+                             '"$request" $status $body_bytes_sent '
+                             '"$http_referer" "$http_user_agent"'
+                             'rt=$request_time uct="$upstream_connect_time" uht="$upstream_header_time" urt="$upstream_response_time"';
+    server {
+        access_log /spool/logs/nginx-access.log upstream_time;
+
+
+IIS
+powershell
+Import-Module WebAdministration
+Set-ItemProperty -Path 'IIS:\Sites\Default Web Site' -Name logfile.logFormat -Value 'W3C'
+Set-ItemProperty -Path 'IIS:\Sites\Default Web Site' -Name logfile.period -Value weekly
