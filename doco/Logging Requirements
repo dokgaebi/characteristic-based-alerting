@@ -1,5 +1,5 @@
 Web Shell Detection Loggin Requirements
-Access logs are required from all devices with web service capabilities.  This should include servers that use web portals for administration and access, such as Splunk, ESXi etc.
+Access logs are required from all devices with web service capabilities.  This should include servers that use web portals for administration and access.
 
 Apache
 /var/log/access.log
